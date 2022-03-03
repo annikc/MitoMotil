@@ -13,4 +13,4 @@ This function takes arguments `num_runs` and `event_hz` which specify how many s
 If `event_hz` is a list of frequencies, the function will generate spike trains of varying frequency (as specified by the list) with each frequency generated for a fixed block of time (specified by the parameter `freq_block`). 
 
 To visualize the spike trains generated, use the function `plot_spike_trains` specified in `plotting.py`. 
-An example image: ![image](./data/SpikeRasters/example_spike_train.png)
+An example image: ![image](data/SpikeRasters/example_spike_train.png)
