@@ -6,6 +6,7 @@ import matplotlib.patches as mpatches
 import seaborn as sns
 from elephant.spike_train_generation import homogeneous_poisson_process
 from quantities import Hz, s, ms
+from functions import get_spike_trains
 import util
 
 pd = util.params_dict
@@ -29,20 +30,10 @@ def spike_plot(pd, **kwargs):
 		if not os.path.exists(savedir):
 			os.makedirs(savedir)
 
-	day_seconds = pd['day_seconds']
-	
-	spiketrain_list = []
-	plot_rasters = []
 	print(f'Plotting Spike Rasters for {event_hz} Hz Inputs')
-	for i in range(num_runs):
-		day_holder = []
-		for j in range(len(event_hz)):
-			day = homogeneous_poisson_process(rate=event_hz[j]*Hz,
-											  t_start=(j*pd['day_seconds'])*s+0.01*s,
-											  t_stop=(j+1)*pd['day_seconds']*s,
-											  as_array=True)
-			day_holder = np.concatenate([day, day_holder])
-		spiketrain_list.append(day_holder)
+
+	spiketrain_list = get_spike_trains(num_runs, event_hz, freq_block=pd['day_seconds'])
+
 
 	color_list = [tuple((np.array(x)+0.85)%1) for x in sns.color_palette("Spectral", num_runs)]
 
@@ -78,19 +69,20 @@ def spike_plot(pd, **kwargs):
 		plt.suptitle('Spike Raster Plot for {} Hz'.format(event_hz[0]), fontsize=12)
 	
 		if savefig:
-			plt.savefig(f'data/SpikeRasters/Raster{event_hz[0]}.{format}'.format(), format=format)
+			plt.savefig(f'./data/SpikeRasters/Raster{event_hz[0]}.{format}', format=format)
 
 	if showfig:
 		plt.show()
 	plt.close()
 
-def mito_stop_hist(pd, **kwargs):
+def mito_stop_hist(pd, n_bins=25, **kwargs):
 	# make example histogram of recovery times
 	recov_means = kwargs.get('recov_times', pd['recov_means'])
 	savedir     = kwargs.get('savedir', './data/Histograms/')
 	savefig     = kwargs.get('savefig', True)
 	showfig     = kwargs.get('showfig', False)
 	format      = kwargs.get('format','png')
+	fixed_scale = kwargs.get('fixed_scale', True)
 
 	if savefig:
 		if not os.path.exists(savedir):
@@ -111,13 +103,15 @@ def mito_stop_hist(pd, **kwargs):
 		
 		plt.figure()
 
-		plt.hist(recov_times, bins=25, color = color_list[-1])
+		plt.hist(recov_times, bins=n_bins, color = color_list[-1])
 		
+		if fixed_scale:
+			plt.ylim([0,200])
+
 		plt.ylabel('Number of Mitochondria')
 		plt.xlabel('Freezing Time (sec)')
-		
 		plt.suptitle('Mitochondria Freezing Times ($\mu$={}, $\sigma^2$={} sec) '.format(mean_stop, int(pd['recov_sd'])))
-		#plt.xlim([0,2000])
+
 		if savefig:
 			plt.savefig(savedir+f'Mito_freezing_histogram_{mean_stop}sec.{format}', format=format)
 		if showfig:

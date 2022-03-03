@@ -29,4 +29,4 @@ def main(pd, plot_stop_times=False,plot_all_spike_freq=False,plot_each_spike_fre
 	pt.plot_pct_mm(data)
 
 if __name__ == '__main__':
-	main(pd)
+	main(pd, plot_stop_times=True,plot_all_spike_freq=False,plot_each_spike_freq=False)
