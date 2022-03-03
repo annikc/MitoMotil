@@ -14,10 +14,13 @@ if load_data:
 else:
 	dose_response = {}
 
-def run_sim(pd, num_runs, **kwargs):
+def run_sim(pd, **kwargs):
 	event_hz = kwargs.get('event_hz', pd['event_hz']) ## must be list
 	recov_means = kwargs.get('recov_means', pd['recov_means']) ## must be list
+
 	savedata = kwargs.get('savedata', True)
+
+	num_runs    = 10                                  # number of runs to average over 
 
 	track_pct_mm_dict = {}
 	for i in range(len(recov_means)):

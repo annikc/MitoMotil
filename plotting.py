@@ -2,14 +2,12 @@ from __future__ import division
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
 import seaborn as sns
 from elephant.spike_train_generation import homogeneous_poisson_process
 from quantities import Hz, s, ms
 import util
 
 pd = util.params_dict
-
 
 def spike_plot(pd, **kwargs):
 	'''
@@ -166,38 +164,3 @@ def plot_pct_mm(data, **kwargs):
 				plt.show()
 			
 			plt.close()
-
-
-## for specific use case
-def plot_spike_raster(spiketrain_list, day_seconds, event_hz, **kwargs):
-	### Spike Raster Plot
-	num_runs = len(spiketrain_list)
-	sns.set_palette("Spectral",num_runs) # Set color palette for plots
-	color_list = [tuple((np.array(x)+0.85)%1) for x in sns.color_palette("Spectral", num_runs)]
-
-	savefig = kwargs.get('savefig', False)
-	file_format  = kwargs.get('fileformat','png')
-
-	plt.figure()
-	plt.plot(np.zeros(day_seconds), 'o', markersize=0)
-	for i, spiketrain in enumerate(spiketrain_list):
-		t = spiketrain
-		plt.vlines(t, i+0.6, i+1.4, color = color_list[i])
-
-	plt.plot((num_runs+1)*np.ones(day_seconds), 'o', markersize=0)
-
-	for i in range(len(event_hz)):
-		x = ((i)*day_seconds + day_seconds/3)
-		y = num_runs + 1
-		plt.annotate('{0:0.3f} Hz'.format(event_hz[i]),(x,y+0.25), rotation = 0)
-		rect = mpatches.Rectangle((i*day_seconds, y),day_seconds,1, color='gray', alpha=0.2)
-		plt.gca().add_patch(rect)
-
-	plt.xlabel('Time (sec)')
-	plt.ylabel('Spike Train Index')
-	plt.gca().tick_params(axis='both', which='major', labelsize=10)
-
-	if savefig:
-		plt.savefig(f'SpikeRaster.{file_format}', format=file_format)
-	plt.show()
-	plt.close()
