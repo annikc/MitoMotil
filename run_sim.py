@@ -4,7 +4,8 @@ import numpy as np
 from elephant.spike_train_generation import homogeneous_poisson_process
 from quantities import Hz, s, ms
 import util
-pd = util.params_dict
+import functions as F
+#params_dict = util.params_dict
 
 np.random.seed(1234)
 
@@ -40,7 +41,7 @@ def run_sim(pd, num_runs, **kwargs):
 			#step over number of example runs
 			for k in range(num_runs):
 				# Create list of mitochondria objects with freezing times drawn from distribution 
-				mito_list = util.populate_list_n(pd['mito_pop'], pd['MM_pct_init'], recov_means[i], pd['recov_sd'])
+				mito_list = F.populate_list_n(pd['mito_pop'], pd['MM_pct_init'], recov_means[i], pd['recov_sd'])
 		
 				pct_mm = []
 				day = homogeneous_poisson_process(rate    = event_freq*Hz,
@@ -62,7 +63,7 @@ def run_sim(pd, num_runs, **kwargs):
 					for m in range(pd['mito_pop']):
 						mito_list[m].release(t)
 
-					mobile_frac = util.calc_frac_mm(mito_list)
+					mobile_frac = F.calc_frac_mm(mito_list)
 					pct_mm.append(mobile_frac)
 
 				# save mobile fraction data for the day 

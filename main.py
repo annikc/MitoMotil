@@ -8,7 +8,7 @@ pd = util.params_dict
 def main(pd, plot_stop_times=False,plot_all_spike_freq=False,plot_each_spike_freq=False):
 	print('Running with Parameters:')
 	for k,v in pd.items():
-		print(f'{k}: {v}' )
+		print(f'{k}: {v}')
 
 	if plot_stop_times:
 		### Make mito freeze time histograms

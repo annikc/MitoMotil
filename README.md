@@ -17,7 +17,7 @@ If `event_hz` is a list of multiple frequencies, the function will generate spik
 
 To visualize the spike trains generated, use the function `plot_spike_trains` specified in `plotting.py`. 
 
-An example raster plot with multiple spike frequencies (each block = 1500s): 
+An example raster plot with multiple spike frequencies (by default each block = 1500s): 
 
 ![image](./data/SpikeRasters/example_spike_train.png)
 

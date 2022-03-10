@@ -6,11 +6,14 @@ import matplotlib.patches as mpatches
 import seaborn as sns
 from elephant.spike_train_generation import homogeneous_poisson_process
 from quantities import Hz, s, ms
-from functions import get_spike_trains
+import functions as F
 import util
 
 pd = util.params_dict
-
+def get_color_list(num_runs):
+	sns.set_palette("Spectral",num_runs) # Set color palette for plots
+	color_list = [tuple((np.array(x)+0.85)%1) for x in sns.color_palette("Spectral", num_runs)]
+	return color_list
 
 def spike_plot(pd, **kwargs):
 	'''
@@ -24,18 +27,14 @@ def spike_plot(pd, **kwargs):
 	showfig  = kwargs.get('showfig', False)
 	format   = kwargs.get('format','png')
 
-	sns.set_palette("Spectral",num_runs) # Set color palette for plots
-
 	if savefig:
 		if not os.path.exists(savedir):
 			os.makedirs(savedir)
 
 	print(f'Plotting Spike Rasters for {event_hz} Hz Inputs')
 
-	spiketrain_list = get_spike_trains(num_runs, event_hz, freq_block=pd['day_seconds'])
-
-
-	color_list = [tuple((np.array(x)+0.85)%1) for x in sns.color_palette("Spectral", num_runs)]
+	spiketrain_list = F.get_spike_trains(num_runs, event_hz, freq_block=pd['day_seconds'])
+	color_list = get_color_list(num_runs)
 
 	plt.figure()
 	plt.plot(np.zeros(pd['day_seconds']), 'o', markersize=0)
@@ -88,13 +87,10 @@ def mito_stop_hist(pd, n_bins=25, **kwargs):
 		if not os.path.exists(savedir):
 			os.makedirs(savedir)
 
-	sns.set_palette("Spectral",10) # Set color palette for plots
-	color_list = [tuple((np.array(x)+0.85)%1) for x in sns.color_palette("Spectral", 10)]
-
 	print('Plotting Mitochondria Stopping Time Histograms...')
 	for i in range(len(recov_means)):
 		mean_stop = pd['recov_means'][i]
-		mito_list = util.populate_list_n(pd['mito_pop'], pd['MM_pct_init'], mean_stop, pd['recov_sd'])
+		mito_list = F.populate_list_n(pd['mito_pop'], pd['MM_pct_init'], mean_stop, pd['recov_sd'])
 		recov_times = []
 		for i in range(pd['mito_pop']):
 			recov_times.append(mito_list[i].MM_stop)
@@ -102,7 +98,7 @@ def mito_stop_hist(pd, n_bins=25, **kwargs):
 		quick_mitos = [x for x in recov_times if x<10]
 		
 		plt.figure()
-
+		color_list = get_color_list(10)
 		plt.hist(recov_times, bins=n_bins, color = color_list[-1])
 		
 		if fixed_scale:
@@ -110,7 +106,8 @@ def mito_stop_hist(pd, n_bins=25, **kwargs):
 
 		plt.ylabel('Number of Mitochondria')
 		plt.xlabel('Freezing Time (sec)')
-		plt.suptitle('Mitochondria Freezing Times ($\mu$={}, $\sigma^2$={} sec) '.format(mean_stop, int(pd['recov_sd'])))
+		sd = int(pd['recov_sd'])
+		plt.suptitle(f'Mitochondria Freezing Times ($\mu$={mean_stop}, $\sigma^2$={sd} sec) ')
 
 		if savefig:
 			plt.savefig(savedir+f'Mito_freezing_histogram_{mean_stop}sec.{format}', format=format)
@@ -142,8 +139,7 @@ def plot_pct_mm(data, **kwargs):
 				average_pct_mm.append(avg)
 
 			plt.figure()
-			sns.set_palette("Spectral",num_runs) # Set color palette for plots
-			color_list = [tuple((np.array(x)+0.85)%1) for x in sns.color_palette("Spectral", num_runs)]
+			color_list = get_color_list(num_runs)
 
 			for i in range(num_runs):
 				plt.plot(track_pct_mm[i], color=color_list[i],alpha = 0.5)
@@ -166,8 +162,7 @@ def plot_pct_mm(data, **kwargs):
 def plot_spike_raster(spiketrain_list, day_seconds, event_hz, **kwargs):
 	### Spike Raster Plot
 	num_runs = len(spiketrain_list)
-	sns.set_palette("Spectral",num_runs) # Set color palette for plots
-	color_list = [tuple((np.array(x)+0.85)%1) for x in sns.color_palette("Spectral", num_runs)]
+	color_list = get_color_list(num_runs)
 
 	savefig = kwargs.get('savefig', False)
 	file_format  = kwargs.get('fileformat','png')
