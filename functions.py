@@ -21,9 +21,9 @@ def get_spike_trains(num_runs, event_hz, freq_block=pd['day_seconds']):
     return spiketrain_list
 
 # normal distribution
-def populate_list_n(mito_pop, MM_pct_init, mean_stop, sd_stop):
+def populate_list_n(mito_pop, MM_pct_init, mean_stop, sd_stop, noisy_recovery=True):
+    # includes noisy_recovery option for giving different mitochondria different recovery times (drawn from normal distribution around mean = fast_stop and sd = 0.1*fast_stop)
     mito_list = []         # initialize list storing instances of mitochondrion class
-    noisy_recovery = True # option for giving different mitochondria different recovery times (drawn from normal distribution around mean = fast_stop and sd = 0.1*fast_stop)
 
     for i in range(mito_pop):
         if noisy_recovery == True:

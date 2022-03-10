@@ -190,3 +190,19 @@ def plot_spike_raster(spiketrain_list, day_seconds, event_hz, **kwargs):
 		plt.savefig(f'SpikeRaster.{file_format}', format=file_format)
 	plt.show()
 	plt.close()
+
+def plot_mito_hist(mito_list, n_bins):
+	recov_times = []
+	for i in range(len(mito_list)):
+		recov_times.append(mito_list[i].MM_stop)
+
+	plt.figure()
+	color_list = get_color_list(10)
+	plt.hist(recov_times, bins=n_bins, color = color_list[-1])
+
+	plt.ylabel('Number of Mitochondria')
+	plt.xlabel('Freezing Time (sec)')
+	#sd = int(pd['recov_sd'])
+	#plt.suptitle(f'Mitochondria Freezing Times ($\mu$={mean_stop}, $\sigma^2$={sd} sec) ')
+
+	plt.show()
