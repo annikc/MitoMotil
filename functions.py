@@ -15,8 +15,7 @@ def get_spike_trains(num_runs, event_hz, freq_block=pd['day_seconds']):
             spikes = homogeneous_poisson_process(rate=event_hz[j]*Hz,
                                                    t_start=(j*freq_block)*s+0.01*s,
                                                    t_stop=(j+1)*freq_block*s, as_array=True)
-            spike_holder = np.concatenate([spikes, spike_holder])
-
+            spike_holder = np.concatenate([spike_holder, spikes])
         spiketrain_list.append(spike_holder)
     return spiketrain_list
 
@@ -43,7 +42,26 @@ def calc_frac_mm(mito_list):
     pop = len(mito_list)
     mobile_num = 0
     for k in mito_list:
-        if k.mobile == True:
+        if k.mobile:
             mobile_num += 1
     mobile_frac = mobile_num/pop
     return mobile_frac
+
+def immobilize_mitos(pd, mito_list, synaptic_event_times, experiment_time=pd['day_seconds']*len(pd['event_hz'])):
+    pct_mm = []
+    for t in range(experiment_time):
+        if t in [int(np.round(event)) for event in synaptic_event_times]:
+            #generate percentage affected by syn event
+            frac_immobilized = np.random.normal(loc=pd['event_mean'], scale=pd['event_sd'])
+            #select mitochondria to immobilize
+            immobilized_ind = np.random.choice(pd['mito_pop'], int(np.round(pd['mito_pop']*frac_immobilized)))
+
+            for m in immobilized_ind:
+                mito_list[m].freeze(t)
+        for m in range(pd['mito_pop']):
+            mito_list[m].release(t)
+
+        mobile_frac = calc_frac_mm(mito_list)
+        pct_mm.append(mobile_frac)
+
+    return np.array(pct_mm)

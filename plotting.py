@@ -202,7 +202,24 @@ def plot_mito_hist(mito_list, n_bins):
 
 	plt.ylabel('Number of Mitochondria')
 	plt.xlabel('Freezing Time (sec)')
-	#sd = int(pd['recov_sd'])
-	#plt.suptitle(f'Mitochondria Freezing Times ($\mu$={mean_stop}, $\sigma^2$={sd} sec) ')
+
+	plt.show()
+
+def plot_recov_pct(pct_mm, spiketrain_list): # pct_mm has to be a list arrays
+	fig, ax = plt.subplots(2,1, sharex=True)
+	if len(pct_mm) > 6:
+		color_list = get_color_list(len(pct_mm))
+	else:
+		color_list = get_color_list(6)
+
+	for i, pm in enumerate(pct_mm):
+		t = spiketrain_list[i]
+		ax[0].vlines(t, i+0.6, i+1.4, color = color_list[i])
+		ax[1].plot(pm, color=color_list[i],alpha = 1)
+
+	#plt.suptitle('Mitochondrial Motility with {} Hz Stimulation \n(Mean Freeze Time {} sec)'.format(event_hz, mean_freeze), fontsize = 12)
+	ax[1].set_ylabel('Mobile Fraction of Mitochondria')
+	ax[1].set_xlabel('Time (sec)')
+	ax[1].set_ylim([0,1.05])
 
 	plt.show()
