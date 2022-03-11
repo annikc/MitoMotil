@@ -53,6 +53,3 @@ immobile for the duration of its stopping time. After this time has elapsed, the
 
 An example plot of the fraction of mitochondria in the mobile pool with a constant rate of synaptic input: 
 ![image](./data/MeanRecovTimes/360sec/AvgMitoMotility0.058.png)
-## Effects of Mean Arrest Time and Synaptic Input on Mitochondrial Motility 
-
--- Dose response 
