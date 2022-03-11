@@ -218,7 +218,9 @@ def plot_recov_pct(pct_mm, spiketrain_list): # pct_mm has to be a list arrays
 		ax[1].plot(pm, color=color_list[i],alpha = 1)
 
 	#plt.suptitle('Mitochondrial Motility with {} Hz Stimulation \n(Mean Freeze Time {} sec)'.format(event_hz, mean_freeze), fontsize = 12)
-	ax[1].set_ylabel('Mobile Fraction of Mitochondria')
+	ax[0].set_yticklabels([])
+	ax[0].set_ylabel('Synaptic \n Events')
+	ax[1].set_ylabel('Mobile Fraction \nof Mitochondria')
 	ax[1].set_xlabel('Time (sec)')
 	ax[1].set_ylim([0,1.05])
 

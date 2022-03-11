@@ -15,7 +15,7 @@ def get_spike_trains(num_runs, event_hz, freq_block=pd['day_seconds']):
             spikes = homogeneous_poisson_process(rate=event_hz[j]*Hz,
                                                    t_start=(j*freq_block)*s+0.01*s,
                                                    t_stop=(j+1)*freq_block*s, as_array=True)
-            spike_holder = np.concatenate([spike_holder, spikes])
+            spike_holder = np.concatenate([spike_holder,spikes], axis=None)
         spiketrain_list.append(spike_holder)
     return spiketrain_list
 
