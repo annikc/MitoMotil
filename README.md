@@ -24,8 +24,8 @@ An example raster plot with multiple spike frequencies (by default each block = 
 ![image](./data/SpikeRasters/example_spike_train.png)
 
 ## Simulating a Pool of Mitochondria 
-We modeled the effect of synaptic inputs of varying frequency on pools of mitochondria with different mean stopping and 
-recovery times. For all experiments we generate a population of 500 instances of a `mitochondrion` object class defined in `util.py`
+We modeled the effect of synaptic inputs of varying frequency on pools of mitochondria with different mean stopping times. 
+For all experiments we generate a population of 500 instances of a `mitochondrion` object class defined in `util.py`
 
 ### Stopping Times
 We established experimentally a lower bound for the mean duration of immobilization of approximately 70 s.
